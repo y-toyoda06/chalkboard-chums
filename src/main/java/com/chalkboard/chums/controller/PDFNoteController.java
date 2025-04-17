@@ -33,7 +33,7 @@ public class PDFNoteController {
 	    return pdfNoteService.createNote(request);
 	}
 	
-	@GetMapping("/notes/{id}")
+	@GetMapping("/{id}")
 	public PDFNote getNote(@PathVariable Long id) {
 		return pdfNoteService.getNoteById(id);
 	}
