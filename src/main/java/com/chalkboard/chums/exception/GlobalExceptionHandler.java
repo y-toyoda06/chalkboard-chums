@@ -1,10 +1,12 @@
 package com.chalkboard.chums.exception;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,6 +34,20 @@ public class GlobalExceptionHandler {
 		
 	}
 	
+	@ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("権限がありません: " + ex.getMessage());
+    }
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+	    Map<String, String> error = new HashMap<>();
+	    error.put("error", ex.getMessage());
+	    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	
+	
 	// その他の例外（予期せぬ500エラーなど）
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
@@ -40,5 +56,5 @@ public class GlobalExceptionHandler {
         error.put("error", "予期せぬエラーが発生しました");
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-	
+    
 }
